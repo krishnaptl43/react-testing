@@ -6,6 +6,7 @@ import { isLogin } from './utils/index';
 import { useCallback } from 'react';
 import axiosClient from "./webServices/webservice"
 import { webUrls } from './webServices/webUrls';
+import { TokenManage } from './webServices/tokenManager';
 
 
 const Tokens = createContext();
@@ -14,24 +15,14 @@ function App() {
   const [token, setToken] = useState(null)
   const [couresPageData, setCouresPageData] = useState([])
 
-
-
+  async function getToken() {
+    let tokenData = await TokenManage()
+    setToken(tokenData)
+  }
   useEffect(() => {
-    const Token = async () => {
-      const data = new FormData();
-      data.append('username', 'ImagnusAPIs');
-      data.append('password', '5EFGJd6m');
-      try {
-        let response = await axiosClient.post(webUrls.TOKEN_URL, data)
-        if (response.status === 200) {
-          setToken(response.data.access_token)
-        }
-      } catch (e) {
-        // console.log(e)
-      }
-    }
-    Token()
+    getToken()
   }, [token])
+
 
   var Alldata = useCallback(async () => {
     let isLog = isLogin()
